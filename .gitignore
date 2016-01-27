@@ -1,0 +1,13 @@
+**/*.aux
+**/*.blg
+**/*.synctex.gz
+**/*.bbl
+**/*.pyc
+**/.*.swp
+**/*.tmp
+**/*.Rhistory
+**/*.R[dD]ata
+**/*.RDS
+**/*.Rproj
+.Rproj.user
+**.*DS_store
