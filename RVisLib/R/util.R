@@ -128,3 +128,11 @@ heatmap.generic <- function(m, rowNodeType='row', colNodeType='col') {
             toJSON(rdend,auto_unbox=TRUE),
             toJSON(cdend,auto_unbox=TRUE)))
 }
+
+#' Generate heatmap from uploaded matrix
+#'
+#' @export
+heatmap.files <- function(matrixFile) {
+    m = read.csv(matrixFile,sep=' ', comment.char="#")
+    return(heatmap.generic(m) )
+}
