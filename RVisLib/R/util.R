@@ -1,3 +1,8 @@
+
+#' gettree
+#'
+#' @param merge_data 'merge' object resulted from hclust function
+#' @param root_index the largest index of the node in hclust tree
 gettree <- function(merge_data, root_index ) {
     children = merge_data[root_index,]
     subtree = list("name"= root_index)
@@ -13,6 +18,11 @@ gettree <- function(merge_data, root_index ) {
     return(subtree)
 }
 
+#' gettree.hclust
+#' 
+#' This function takes a hclust result and returns a tree structure
+#' @param hc result of hclust function
+#' @param root_index the index of the node to start as root, generally not necessary to specify if one wants to get the full tree from hclust
 gettree.hclust <- function(hc, root_index=NULL) {
     if (is.null(root_index)) { root_index = dim(hc$merge)[1] }
     children = hc$merge[root_index,]
@@ -31,6 +41,9 @@ gettree.hclust <- function(hc, root_index=NULL) {
 
 library(igraph)
 
+#' graph2json
+#'
+#' Convert an 'igraph' object to json-compatible object
 graph2json <- function(g, zeroBasedIndex=TRUE, attributes= c('name') ) {
     gjso = list(nodes=c(), links=c())
     
@@ -52,6 +65,9 @@ graph2json <- function(g, zeroBasedIndex=TRUE, attributes= c('name') ) {
     return(gjso)
 }
 
+#' matrix2json
+#' 
+#' Convert an adjacency matrix to json-compatible object
 matrix2json <- function(m, mode='undirected', weighted=TRUE, zeroBasedIndex=TRUE, node.attributes= NA ) {
     g = graph.adjacency(m, mode =mode, weighted=weighted)
     for (attr in attributes) {
@@ -69,3 +85,21 @@ matrix2json <- function(m, mode='undirected', weighted=TRUE, zeroBasedIndex=TRUE
     }
     return(gjso)
 }
+
+
+library(jsonlite) 
+
+#' heatmap
+#'
+#' Return 3 json files for visualizing a heatmap: matrix, row dendrogram and column dendrogram
+heatmap.js <- function(m) {
+    mat = matrix2json(m, mode='undirected', weighted=TRUE)
+    rdist = dist(m)
+    cdist = dist(t(m))
+    rowdend = gettree.hclust(hclust(dist(m)))
+    coldend = gettree.hclust(hclust(dist(t(m)))) 
+    return(toJSON(mat,auto_unbox=T),
+            toJSON(rowdend, auto_unbox=T),
+            toJSON(coldend, auto_unbox=T))
+}
+

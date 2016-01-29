@@ -1,9 +1,9 @@
 Package: RVisLib
 Type: Package
-Title: R functions for calling by visualizing apps 
-Version: 1.0
+Title: R functions for calling by visualizing apps
+Version: 0.0.0.9
 Date: 2016-01-12
-Author: Trang Tran
-Maintainer: ttdtrang@gmail.com  
+Authors@R: person("Trang", "Tran", email = "ttdtrang@gmail.com", role = c("aut", "cre"))
 Description: parsers of many R object structures into json format
 License: MIT
+RoxygenNote: 5.0.1
