@@ -7,3 +7,5 @@ Authors@R: person("Trang", "Tran", email = "ttdtrang@gmail.com", role = c("aut",
 Description: parsers of many R object structures into json format
 License: MIT
 RoxygenNote: 5.0.1
+Imports: igraph,
+    jsonlite

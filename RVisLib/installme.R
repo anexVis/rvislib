@@ -1,0 +1,5 @@
+library(devtools)
+devtools::use_package('igraph')
+devtools::use_package('jsonlite')
+devtools::document()
+devtools::install(".", quick=TRUE, force_deps=FALSE, upgrade_dependencies=FALSE)
