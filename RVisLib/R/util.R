@@ -74,10 +74,10 @@ graph2json <- function(g, zeroBasedIndex=TRUE, attributes= c('name') ) {
 matrix2json <- function(m, mode='undirected', weighted=TRUE, zeroBasedIndex=TRUE, node.attributes= NA ) {
     library(igraph)
     g = graph.adjacency(m, mode =mode, weighted=weighted)
-    for (attr in attributes) {
+    for (attr in node.attributes) {
         vertex.attributes(g, attr.name) = attr.value    
     }
-
+    gjso = list(nodes=c(), links=c())
     for (i in 1:length(E(g)) ) {
         if (! is.na( E(g)[[i]]$weight) ) {
             gjso$links[[i]] = list(source=as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0), 
@@ -86,6 +86,74 @@ matrix2json <- function(m, mode='undirected', weighted=TRUE, zeroBasedIndex=TRUE
             
         }
         
+    }
+    return(gjso)
+}
+
+#' tsv2json
+#' 
+#' Convert a tsv-formatted directed network to json-compatible object
+#' @export
+#' @import igraph
+tsv2json <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
+    library(igraph)
+    tsv = read.table(tsv_file,header=F,sep='\t',stringsAsFactors = F)
+    g = graph_from_edgelist(as.matrix(tsv[,1:2]),directed = TRUE)
+    if (mode == 'signed') {
+        tsv[tsv[,3] == '+',3] = 1
+        tsv[tsv[,3] == '-',3] = -1
+        E(g)$weight = as.numeric(tsv[,3])
+    } else {
+        E(g)$weight = tsv[,3]   # might not work if the tsv file also includes 0-weighted edges
+    }
+    gjso = list(nodes=c(), links=c()) 
+    for (i in 1:length(V(g))) {
+        gjso$nodes[[i]] = list(id = i - (if (zeroBasedIndex) 1 else 0),
+                               name=V(g)[[i]]$name)
+    }
+    for (i in 1:length(E(g)) ) {
+        if (! is.na( E(g)[[i]]$weight) ) {
+            gjso$links[[i]] = list(source=as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0), 
+                               target=as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0), 
+                               value=E(g)[[i]]$weight )    
+        }
+    }
+    return(gjso)
+}
+
+#' tsv2jsoncy
+#' 
+#' Convert a tsv-formatted directed network to json-compatible object that could be imported directly by cytoscape
+#' @export
+#' @import igraph
+tsv2jsoncy <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
+    library(igraph)
+    tsv = read.table(tsv_file,header=F,sep='\t',stringsAsFactors = F)
+    g = graph_from_edgelist(as.matrix(tsv[,1:2]),directed = TRUE)
+    if (mode == 'signed') {
+        tsv[tsv[,3] == '+',3] = 1
+        tsv[tsv[,3] == '-',3] = -1
+        E(g)$weight = as.numeric(tsv[,3])
+    } else {
+        E(g)$weight = tsv[,3]   # might not work if the tsv file also includes 0-weighted edges
+    }
+    gjso = list(); 
+    nNodes = length(V(g))
+    for (i in 1:nNodes) {
+        gjso[[i]] = list(group= 'nodes',
+                         data = list(
+                            id = as.character(i - (if (zeroBasedIndex) 1 else 0)),
+                            name=V(g)[[i]]$name))
+    }
+    for (i in 1:length(E(g)) ) {
+        if (! is.na( E(g)[[i]]$weight) ) {
+            gjso[[i + nNodes]] = list(group = 'edges',
+                                      data = list(
+                                        id = paste('e',i,sep=''),
+                                        source=as.character(as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0)), 
+                                        target=as.character(as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0)), 
+                                        value=E(g)[[i]]$weight))
+        }
     }
     return(gjso)
 }
