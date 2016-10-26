@@ -1,0 +1,34 @@
+---
+title: "RVisLib utility"
+author: "Trang Tran"
+date: "June 9, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## tsv2json
+```{r}
+tsv_signed = '../../MI_compare/data/GNW/net1/insilico_size100_1_goldstandard_signed.tsv'
+```
+
+```{r}
+library(igraph)
+source('R/util.R')
+gobj = tsv2json(tsv_signed)
+library(jsonlite)
+write(toJSON(gobj,auto_unbox = TRUE,pretty = TRUE),file='test.json')
+```
+
+## tsv2jsoncy
+
+Cytoscape-ready json
+
+```{r}
+library(igraph)
+source('R/util.R')
+gobj = tsv2jsoncy(tsv_signed)
+write(toJSON(gobj,auto_unbox = TRUE,pretty = TRUE),file='test-cy.json')
+```

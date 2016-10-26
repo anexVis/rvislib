@@ -1,4 +1,4 @@
-Package: RVisLib
+Package: rvislib
 Type: Package
 Title: R functions for calling by visualizing apps
 Version: 0.0.0.9
