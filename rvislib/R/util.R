@@ -164,7 +164,7 @@ tsv2jsoncy <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
 #' Return 3 json files for visualizing a heatmap: matrix, row dendrogram and column dendrogram
 #' @importFrom jsonlite toJSON
 #' @export
-heatmap.adjacency <- function(m) {
+heatmap.adjacency <- function(m, zeroBasedIndex=TRUE) {
     mat = matrix2json(m, mode='undirected', weighted=TRUE,zeroBasedIndex=zeroBasedIndex)
     rdist = dist(t(m))
     cdist = dist(m)
