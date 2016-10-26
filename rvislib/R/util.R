@@ -71,7 +71,7 @@ graph2json <- function(g, zeroBasedIndex=TRUE, attributes= c('name') ) {
 #' Convert an adjacency matrix to json-compatible object
 #' @export
 #' @import igraph
-matrix2json <- function(m, mode='undirected', weighted=TRUE, zeroBasedIndex=TRUE, node.attributes= NA ) {
+matrix2json <- function(m, mode='undirected', weighted=TRUE, zeroBasedIndex=TRUE, node.attributes= NULL) {
     library(igraph)
     g = graph.adjacency(m, mode =mode, weighted=weighted)
     for (attr in node.attributes) {
