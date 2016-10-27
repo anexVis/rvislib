@@ -66,29 +66,29 @@ graph2json <- function(g, zeroBasedIndex=TRUE, attributes= c('name') ) {
     return(gjso)
 }
 
-#' matrix2json
-#' 
-#' Convert an adjacency matrix to json-compatible object
-#' @export
-#' @import igraph
-matrix2json <- function(m, mode='undirected', weighted=TRUE, zeroBasedIndex=TRUE, node.attributes= NULL) {
-    library(igraph)
-    g = graph.adjacency(m, mode =mode, weighted=weighted)
-    for (attr in node.attributes) {
-        vertex.attributes(g, attr.name) = attr.value    
-    }
-    gjso = list(nodes=c(), links=c())
-    for (i in 1:length(E(g)) ) {
-        if (! is.na( E(g)[[i]]$weight) ) {
-            gjso$links[[i]] = list(source=as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0), 
-                               target=as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0), 
-                               value=E(g)[[i]]$weight )    
-            
-        }
-        
-    }
-    return(gjso)
-}
+# #' matrix2json
+# #' 
+# #' Convert an adjacency matrix to json-compatible object
+# #' @export
+# #' @import igraph
+# matrix2json <- function(m, mode='undirected', weighted=TRUE, zeroBasedIndex=TRUE, node.attributes="name") {
+#     library(igraph)
+#     g = graph.adjacency(m, mode =mode, weighted=weighted)
+#     for (attr in node.attributes) {
+#         vertex.attributes(g, attr.name) = attr.value    
+#     }
+#     gjso = list(nodes=c(), links=c())
+#     for (i in 1:length(E(g)) ) {
+#         if (! is.na( E(g)[[i]]$weight) ) {
+#             gjso$links[[i]] = list(source=as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0), 
+#                                target=as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0), 
+#                                value=E(g)[[i]]$weight )    
+#             
+#         }
+#         
+#     }
+#     return(gjso)
+# }
 
 #' tsv2json
 #' 
@@ -165,12 +165,14 @@ tsv2jsoncy <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
 #' @importFrom jsonlite toJSON
 #' @export
 heatmap.adjacency <- function(m, zeroBasedIndex=TRUE) {
-    mat = matrix2json(m, mode='undirected', weighted=TRUE,zeroBasedIndex=zeroBasedIndex)
+    # mat = matrix2json(m, mode='undirected', weighted=TRUE, node.attributes="name", zeroBasedIndex=zeroBasedIndex)
     rdist = dist(t(m))
     cdist = dist(m)
+    gr = graph.adjacency(m, mode='directed', weighted=T)
+    gr = delete_edges(gr, E(gr)[is.na(weight)])
     rowdend = gettree.hclust(hclust(dist(m)))
     coldend = gettree.hclust(hclust(dist(t(m)))) 
-    return(c(toJSON(mat,auto_unbox=T),
+    return(c(toJSON(graph2json(gr, attributes="name"),auto_unbox=T),
              toJSON(rowdend, auto_unbox=T),
              toJSON(coldend, auto_unbox=T)))
 }
