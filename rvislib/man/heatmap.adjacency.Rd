@@ -4,9 +4,9 @@
 \alias{heatmap.adjacency}
 \title{Generate heatmap from an adjacency matrix (symmetric)}
 \usage{
-heatmap.adjacency(m, zeroBasedIndex = TRUE)
+heatmap.adjacency(m, zeroBasedIndex = TRUE, nodeLabels = NULL)
 }
 \description{
-Return 3 json files for visualizing a heatmap: matrix, row dendrogram and column dendrogram
+Return 2 json files for visualizing a heatmap: matrix and row dendrogram
 }
 
