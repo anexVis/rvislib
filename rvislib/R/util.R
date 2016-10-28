@@ -167,14 +167,13 @@ tsv2jsoncy <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
 heatmap.adjacency <- function(m, zeroBasedIndex=TRUE) {
     # mat = matrix2json(m, mode='undirected', weighted=TRUE, node.attributes="name", zeroBasedIndex=zeroBasedIndex)
     rdist = dist(t(m))
-    cdist = dist(m)
+    # cdist = dist(m)
     gr = graph.adjacency(m, mode='directed', weighted=T)
     gr = delete_edges(gr, E(gr)[is.na(weight)])
     rowdend = gettree.hclust(hclust(dist(m)))
-    coldend = gettree.hclust(hclust(dist(t(m)))) 
+    # coldend = gettree.hclust(hclust(dist(t(m)))) 
     return(c(toJSON(graph2json(gr, attributes="name"),auto_unbox=T),
-             toJSON(rowdend, auto_unbox=T),
-             toJSON(coldend, auto_unbox=T)))
+             toJSON(rowdend, auto_unbox=T)))
 }
 #' Generate heatmap from a generic mxn matrix
 #'
