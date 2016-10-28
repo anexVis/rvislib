@@ -161,11 +161,11 @@ tsv2jsoncy <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
 
 #' Generate heatmap from an adjacency matrix (symmetric)
 #'
-#' Return 2 json files for visualizing a heatmap: matrix and row dendrogram
+#' Return an array of 2 json objects for visualizing a heatmap: matrix and row dendrogram
 #' @importFrom jsonlite toJSON
 #' @export
-heatmap.adjacency <- function(m, zeroBasedIndex=TRUE, nodeLabels=NULL) {
-    gr = graph.adjacency(m, mode='directed', weighted=T)
+heatmap.adjacency <- function(m, zeroBasedIndex=TRUE,add.colnames='name', add.rownames='label') {
+    gr = graph.adjacency(m, mode='directed', weighted=T, add.colnames = add.colnames, add.rownames = add.rownames)
     gr = delete_edges(gr, E(gr)[is.na(weight)])
     rowdend = gettree.hclust(hclust(dist(m)))
     return(c(toJSON(graph2json(gr, attributes="name"),auto_unbox=T),
