@@ -9,3 +9,4 @@ License: MIT
 RoxygenNote: 5.0.1
 Imports: igraph,
     jsonlite
+Suggests: testthat

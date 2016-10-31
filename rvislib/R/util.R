@@ -168,7 +168,7 @@ heatmap.adjacency <- function(m, zeroBasedIndex=TRUE,add.colnames='name', add.ro
     gr = graph.adjacency(m, mode='directed', weighted=T, add.colnames = add.colnames, add.rownames = add.rownames)
     gr = delete_edges(gr, E(gr)[is.na(weight)])
     rowdend = gettree.hclust(hclust(dist(m)))
-    return(c(toJSON(graph2json(gr, attributes="name"),auto_unbox=T),
+    return(c(toJSON(graph2json(gr, attributes= c(add.colnames,add.rownames)),auto_unbox=T),
              toJSON(rowdend, auto_unbox=T)))
 }
 #' Generate heatmap from a generic mxn matrix
