@@ -19,7 +19,7 @@ gettree <- function(merge_data, root_index ) {
 }
 
 #' gettree.hclust
-#' 
+#'
 #' This function takes a hclust result and returns a tree structure
 #' @param hc result of hclust function
 #' @param root_index the index of the node to start as root, generally not necessary to specify if one wants to get the full tree from hclust
@@ -47,27 +47,27 @@ gettree.hclust <- function(hc, root_index=NULL) {
 #' @export
 graph2json <- function(g, zeroBasedIndex=TRUE, attributes= c('name') ) {
     gjso = list(nodes=c(), links=c())
-    
+
     for (i in 1:length(V(g)) ) {
 #         z <- function(an) {return(V(g)[[i]]$an)}
         gjso$nodes[[i]] = c( list(id = if (zeroBasedIndex) (i-1) else i), sapply(attributes, FUN= function(an) {return( vertex_attr(g,an, index=i) )}) )
-                               
+
     }
 
     for (i in 1:length(E(g)) ) {
         if ( ! is.na( E(g)[[i]]$weight ) ) {
-            gjso$links[[i]] = list(source=as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0), 
-                               target=as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0), 
-                               value=E(g)[[i]]$weight )    
-            
+            gjso$links[[i]] = list(source=as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0),
+                               target=as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0),
+                               value=E(g)[[i]]$weight )
+
         }
-        
+
     }
     return(gjso)
 }
 
 # #' matrix2json
-# #' 
+# #'
 # #' Convert an adjacency matrix to json-compatible object
 # #' @export
 # #' @import igraph
@@ -75,23 +75,23 @@ graph2json <- function(g, zeroBasedIndex=TRUE, attributes= c('name') ) {
 #     library(igraph)
 #     g = graph.adjacency(m, mode =mode, weighted=weighted)
 #     for (attr in node.attributes) {
-#         vertex.attributes(g, attr.name) = attr.value    
+#         vertex.attributes(g, attr.name) = attr.value
 #     }
 #     gjso = list(nodes=c(), links=c())
 #     for (i in 1:length(E(g)) ) {
 #         if (! is.na( E(g)[[i]]$weight) ) {
-#             gjso$links[[i]] = list(source=as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0), 
-#                                target=as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0), 
-#                                value=E(g)[[i]]$weight )    
-#             
+#             gjso$links[[i]] = list(source=as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0),
+#                                target=as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0),
+#                                value=E(g)[[i]]$weight )
+#
 #         }
-#         
+#
 #     }
 #     return(gjso)
 # }
 
 #' tsv2json
-#' 
+#'
 #' Convert a tsv-formatted directed network to json-compatible object
 #' @export
 #' @import igraph
@@ -106,23 +106,23 @@ tsv2json <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
     } else {
         E(g)$weight = tsv[,3]   # might not work if the tsv file also includes 0-weighted edges
     }
-    gjso = list(nodes=c(), links=c()) 
+    gjso = list(nodes=c(), links=c())
     for (i in 1:length(V(g))) {
         gjso$nodes[[i]] = list(id = i - (if (zeroBasedIndex) 1 else 0),
                                name=V(g)[[i]]$name)
     }
     for (i in 1:length(E(g)) ) {
         if (! is.na( E(g)[[i]]$weight) ) {
-            gjso$links[[i]] = list(source=as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0), 
-                               target=as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0), 
-                               value=E(g)[[i]]$weight )    
+            gjso$links[[i]] = list(source=as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0),
+                               target=as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0),
+                               value=E(g)[[i]]$weight )
         }
     }
     return(gjso)
 }
 
 #' tsv2jsoncy
-#' 
+#'
 #' Convert a tsv-formatted directed network to json-compatible object that could be imported directly by cytoscape
 #' @export
 #' @import igraph
@@ -137,7 +137,7 @@ tsv2jsoncy <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
     } else {
         E(g)$weight = tsv[,3]   # might not work if the tsv file also includes 0-weighted edges
     }
-    gjso = list(); 
+    gjso = list();
     nNodes = length(V(g))
     for (i in 1:nNodes) {
         gjso[[i]] = list(group= 'nodes',
@@ -150,8 +150,8 @@ tsv2jsoncy <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
             gjso[[i + nNodes]] = list(group = 'edges',
                                       data = list(
                                         id = paste('e',i,sep=''),
-                                        source=as.character(as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0)), 
-                                        target=as.character(as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0)), 
+                                        source=as.character(as.integer(head_of(g, i)) - (if (zeroBasedIndex) 1 else 0)),
+                                        target=as.character(as.integer(tail_of(g,i))  - (if (zeroBasedIndex) 1 else 0)),
                                         value=E(g)[[i]]$weight))
         }
     }
@@ -161,12 +161,15 @@ tsv2jsoncy <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
 
 #' Generate heatmap from an adjacency matrix (symmetric)
 #'
-#' Return an array of 2 json objects for visualizing a heatmap: matrix and row dendrogram
+#' Return an array of 2 json objects for visualizing a heatmap: matrix and row dendrogram.
+#' Since we return the row dendrogram, rownames in m would be used as leave names in the dendrogram.
+#' To keep the attribute consistent, be sure to specify add.rownames='name' in calling this function
 #' @importFrom jsonlite toJSON
 #' @export
-heatmap.adjacency <- function(m, zeroBasedIndex=TRUE,add.colnames='name', add.rownames='label') {
+heatmap.adjacency <- function(m, zeroBasedIndex=TRUE,add.colnames='label', add.rownames='name') {
     gr = graph.adjacency(m, mode='directed', weighted=T, add.colnames = add.colnames, add.rownames = add.rownames)
     gr = delete_edges(gr, E(gr)[is.na(weight)])
+
     rowdend = gettree.hclust(hclust(dist(m)))
     return(c(toJSON(graph2json(gr, attributes= c(add.colnames,add.rownames)),auto_unbox=T),
              toJSON(rowdend, auto_unbox=T)))
@@ -184,7 +187,7 @@ heatmap.generic <- function(m, rowNodeType='row', colNodeType='col') {
     extended_mat = matrix(rep(NA, esize^2), nrow=esize, ncol=esize)
     extended_mat[1:dim(m)[1], 1:dim(m)[2]] = m[,]
     rownames(extended_mat) = c(rownames(m), colnames(m))
-    colnames(extended_mat) = c(colnames(m), rownames(m))    
+    colnames(extended_mat) = c(colnames(m), rownames(m))
     gr = graph.adjacency(extended_mat, mode='directed', weighted=T)
     # vertex_attr(gr,'nodeType') = c(rep("tissue", times=dim(m)[2]), rep("gene", times=dim(m)[1]))
     vertex_attr(gr,'nodeType') = c(rep(colNodeType, times=dim(m)[2]), rep(rowNodeType, times=dim(m)[1]))
