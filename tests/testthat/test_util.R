@@ -11,13 +11,35 @@ test_that("Generate json data for heatmap plotting. Please verify output in log 
     rownames(corrMatrix) = paste("V", c(1:4), sep="")
     hm_data = heatmap.adjacency(corrMatrix)
     flog.info("Input adjacency matrix", corrMatrix,name="log", capture=TRUE)
-    expect_equal(length(hm_data),2)
+    expect_equal(length(hm_data),3)
     
     flog.info("Matrix data",
               jsonlite::prettify(hm_data[1]),
               name="log", 
               capture=TRUE)
+    flog.info("Metadata",
+              jsonlite::prettify(hm_data[3]),
+              name="log",
+              capture=TRUE)
 })
+
+test_that("Generate json data for heatmap plotting, with metadata. Please verify output in log file.", {
+    # confirm that corrMatrix has both rownames and colnames
+    rownames(corrMatrix) = paste("V", c(1:4), sep="")
+    hm_data = heatmap.adjacency(corrMatrix, metadata=list('method'= 'Pearson (maybe)', 'number of samples'= 5))
+    flog.info("Input adjacency matrix", corrMatrix,name="log", capture=TRUE)
+    expect_equal(length(hm_data),3)
+    
+    flog.info("Matrix data",
+              jsonlite::prettify(hm_data[1]),
+              name="log", 
+              capture=TRUE)
+    flog.info("Metadata",
+              jsonlite::prettify(hm_data[3]),
+              name="log",
+              capture=TRUE)
+})
+
 
 # This function is from igraph, and should work. Test is just to demonstrate the proper use
 test_that("graph.adjacency incorporates row and column names in vertex attribute", {

@@ -166,14 +166,16 @@ tsv2jsoncy <- function(tsv_file, mode='signed',zeroBasedIndex=TRUE) {
 #' To keep the attribute consistent, be sure to specify add.rownames='name' in calling this function
 #' @importFrom jsonlite toJSON
 #' @export
-heatmap.adjacency <- function(m, zeroBasedIndex=TRUE,add.colnames='label', add.rownames='name') {
+heatmap.adjacency <- function(m, zeroBasedIndex=TRUE,add.colnames='label', add.rownames='name', metadata=list()) {
     gr = graph.adjacency(m, mode='directed', weighted=T, add.colnames = add.colnames, add.rownames = add.rownames)
     gr = delete_edges(gr, E(gr)[is.na(weight)])
 
     rowdend = gettree.hclust(hclust(dist(m)))
     return(c(toJSON(graph2json(gr, attributes= c(add.colnames,add.rownames)),auto_unbox=T),
-             toJSON(rowdend, auto_unbox=T)))
+             toJSON(rowdend, auto_unbox=T),
+             toJSON(metadata,auto_unbox=T)))
 }
+
 #' Generate heatmap from a generic mxn matrix
 #'
 #' @importFrom jsonlite toJSON
