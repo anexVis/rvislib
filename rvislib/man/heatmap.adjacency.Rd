@@ -4,10 +4,12 @@
 \alias{heatmap.adjacency}
 \title{Generate heatmap from an adjacency matrix (symmetric)}
 \usage{
-heatmap.adjacency(m, zeroBasedIndex = TRUE, add.colnames = "name",
-  add.rownames = "label")
+heatmap.adjacency(m, zeroBasedIndex = TRUE, add.colnames = "label",
+  add.rownames = "name")
 }
 \description{
-Return an array of 2 json objects for visualizing a heatmap: matrix and row dendrogram
+Return an array of 2 json objects for visualizing a heatmap: matrix and row dendrogram.
+Since we return the row dendrogram, rownames in m would be used as leave names in the dendrogram.
+To keep the attribute consistent, be sure to specify add.rownames='name' in calling this function
 }
 
