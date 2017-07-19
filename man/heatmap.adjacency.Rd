@@ -5,7 +5,7 @@
 \title{Generate heatmap from an adjacency matrix (symmetric)}
 \usage{
 heatmap.adjacency(m, zeroBasedIndex = TRUE, add.colnames = "label",
-  add.rownames = "name")
+  add.rownames = "name", metadata = list())
 }
 \description{
 Return an array of 2 json objects for visualizing a heatmap: matrix and row dendrogram.
